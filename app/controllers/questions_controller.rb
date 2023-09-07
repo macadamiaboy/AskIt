@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 class QuestionsController < ApplicationController
 
+  before_action :set_question!, only: %i[show destroy edit update]
+
   def show
-    @question = Question.find_by id: params[:id]
+    @answer = @question.answers.build
+    @answers = @question.answers.order created_at: :desc
   end
 
   def destroy
-    @question = Question.find_by id: params[:id]
     @question.delete
     redirect_to questions_path
   end
@@ -20,11 +22,9 @@ class QuestionsController < ApplicationController
   end
 
   def edit
-    @question = Question.find_by id: params[:id]
   end
 
   def update
-    @question = Question.find_by id: params[:id]
     if @question.update question_params
       redirect_to questions_path
     else
@@ -44,5 +44,9 @@ class QuestionsController < ApplicationController
   private
   def question_params
     params.require(:question).permit(:title, :body)
+  end
+
+  def set_question!
+    @question = Question.find params[:id]
   end
 end
