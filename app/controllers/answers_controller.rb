@@ -2,8 +2,8 @@ class AnswersController < ApplicationController
   before_action :set_question!
 
   def destroy
-    @answer = @question.answers.find params[:id]
-    @answer.delete
+    answer = @question.answers.find params[:id]
+    answer.delete
     redirect_to questions_path(@question)
   end
 
@@ -12,9 +12,12 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to questions_path(@question)
     else
+      @answers = @question.answers.order created_at: :desc
       render 'questions/show'
     end
   end
+
+  private
 
   def answer_params
     params.require(:answer).permit(:body)
