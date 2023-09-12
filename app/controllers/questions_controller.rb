@@ -9,6 +9,9 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
+    @question.answers.each do |current|
+      current.delete
+    end
     @question.delete
     redirect_to questions_path
   end
